@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IVF Care Center - Bringing Miracles to Life</title>
+    <style>
+        /* --- GLOBAL STYLES --- */
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            margin: 0; 
+            padding: 0; 
+            background-color: #f8f9fa; 
+            color: #333;
+        }
+        
+        /* --- HEADER --- */
+        header { 
+            background: #ffffff; 
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            padding: 20px 50px; 
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo { font-size: 24px; font-weight: bold; color: #e91e63; }
+        nav a { text-decoration: none; color: #333; margin-left: 20px; font-weight: 500; }
+        
+        /* --- HERO SECTION --- */
+        .hero { 
+            position: relative;
+            text-align: center; 
+            color: white;
+            background-color: #2c3e50; 
+        }
+        .hero img {
+            width: 100%;
+            height: 550px;
+            object-fit: cover;
+            opacity: 0.6; /* Dark tint for text visibility */
+        }
+        .hero-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+        }
+        .hero h1 { font-size: 3.5rem; margin-bottom: 15px; text-shadow: 2px 2px 4px rgba(0,0,0,0.6); }
+        .tagline { font-size: 1.4rem; font-weight: 300; text-shadow: 1px 1px 3px rgba(0,0,0,0.6); }
+
+        /* --- APPOINTMENT SECTION --- */
+        .appointment-section {
+            background: white;
+            padding: 40px;
+            margin: -60px auto 40px; /* Pulls section up over image */
+            width: 85%;
+            max-width: 1000px;
+            border-radius: 10px;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+            position: relative;
+            z-index: 10; /* Above the hero image */
+        }
+        .appointment-form {
+            display: flex;
+            gap: 20px;
+            align-items: flex-end;
+            flex-wrap: wrap;
+        }
+        .form-group { flex: 1; min-width: 200px; }
+        .form-group label { display: block; margin-bottom: 8px; font-weight: 600; color: #555; }
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 15px;
+            box-sizing: border-box; /* Important for padding */
+        }
+        .btn-book {
+            background-color: #e91e63;
+            color: white;
+            padding: 14px 35px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+        .btn-book:hover { background-color: #c2185b; }
+
+        /* --- SUCCESS STORIES --- */
+        .section-title { text-align: center; color: #2c3e50; margin: 70px 0 40px; font-size: 2rem; }
+        
+        .stories-container {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            padding: 0 50px 60px;
+            flex-wrap: wrap;
+        }
+        .story-card {
+            background: white;
+            flex: 1;
+            min-width: 240px;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            text-align: center;
+            border-top: 5px solid #e91e63;
+            transition: transform 0.2s;
+        }
+        .story-card:hover { transform: translateY(-5px); }
+        .story-card h3 { margin: 15px 0 10px; color: #333; }
+        .story-card p { font-size: 0.95rem; color: #666; line-height: 1.6; font-style: italic; }
+        .stars { color: #f1c40f; font-size: 1.3rem; letter-spacing: 2px; }
+
+        /* --- DOCTORS SECTION --- */
+        .doctors-bg { background-color: #eef2f5; padding: 60px 50px 80px; }
+        .doctors-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .doctor-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            text-align: center;
+        }
+        .doctor-img { 
+            height: 250px; 
+            width: 100%; 
+            object-fit: cover; 
+            background-color: #ddd; 
+        }
+        .doc-info { padding: 25px; }
+        .doc-name { display: block; font-weight: bold; font-size: 1.3rem; color: #2c3e50; margin-bottom: 5px; }
+        .doc-spec { color: #e91e63; font-size: 0.95rem; font-weight: 600; display: block; margin-bottom: 15px; }
+        .doc-info p { color: #666; font-size: 0.9rem; }
+
+        /* --- CHATBOT WIDGET STYLES (Fixed) --- */
+        .chat-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background-color: #e91e63;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 65px;
+            height: 65px;
+            font-size: 28px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            transition: transform 0.3s, background 0.3s;
+            z-index: 9999; /* Ensure it is on TOP of everything */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .chat-btn:hover { transform: scale(1.1); background-color: #d81b60; }
+
+        .chat-window {
+            display: none; /* Hidden by default */
+            position: fixed;
+            bottom: 110px;
+            right: 30px;
+            width: 360px;
+            height: 550px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            flex-direction: column;
+            overflow: hidden;
+            z-index: 9999; /* Ensure it is on TOP of everything */
+            border: 1px solid #eee;
+        }
+
+        .chat-header {
+            background: linear-gradient(135deg, #e91e63, #c2185b);
+            color: white;
+            padding: 18px;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 1.1rem;
+        }
+        .close-btn { cursor: pointer; font-size: 1.2rem; opacity: 0.8; transition: opacity 0.2s; }
+        .close-btn:hover { opacity: 1; }
+
+        .chat-messages {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+            background-color: #f8f9fa;
+        }
+        .message {
+            margin-bottom: 12px;
+            padding: 12px 16px;
+            border-radius: 12px;
+            max-width: 80%;
+            font-size: 14px;
+            line-height: 1.5;
+            position: relative;
+            word-wrap: break-word;
+        }
+        /* Bot Message Style */
+        .bot-msg {
+            background: #ffffff;
+            color: #333;
+            border: 1px solid #e0e0e0;
+            margin-right: auto;
+            border-bottom-left-radius: 2px;
+        }
+        /* User Message Style */
+        .user-msg {
+            background: #e91e63;
+            color: white;
+            margin-left: auto;
+            border-bottom-right-radius: 2px;
+            text-align: left;
+        }
+
+        .chat-input-area {
+            display: flex;
+            border-top: 1px solid #eee;
+            padding: 10px;
+            background: white;
+        }
+        input[type="text"] {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 25px;
+            outline: none;
+            padding-left: 15px;
+        }
+        input[type="text"]:focus { border-color: #e91e63; }
+        
+        button.send-btn {
+            background: transparent;
+            border: none;
+            color: #e91e63;
+            font-weight: bold;
+            padding: 0 15px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-left: 5px;
+        }
+        button.send-btn:hover { color: #c2185b; }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">💖Yashoda IVF Care</div>
+        <nav>
+            <a href="#">Home</a>
+            <a href="#">Treatments</a>
+            <a href="#">Doctors</a>
+            <a href="#">Contact</a>
+        </nav>
+    </header>
+
+    <div class="hero">
+        <img src="111.jpg" alt="Mother holding newborn baby">
+        <div class="hero-content">
+            <h1>Bringing Miracles to Life</h1>
+            <div class="tagline">Compassionate Care. Advanced Science. Beautiful Beginnings.</div>
+        </div>
+    </div>
+
+    <div class="appointment-section">
+        <h3 style="margin-top:0; color:#2c3e50; font-size: 1.5rem;">Book a Free Consultation</h3>
+        <form class="appointment-form" onsubmit="alert('Appointment Request Sent!'); return false;">
+            <div class="form-group">
+                <label>Your Name</label>
+                <input type="text" placeholder="e.g. Jane Doe" required>
+            </div>
+            <div class="form-group">
+                <label>Phone Number</label>
+                <input type="tel" placeholder="e.g. +1 555 0199" required>
+            </div>
+            <div class="form-group">
+                <label>Preferred Clinic</label>
+                <select required>
+                    <option value="">Select Location...</option>
+                    <option value="ny">New York Center</option>
+                    <option value="la">Los Angeles Branch</option>
+                    <option value="ch">Chicago Clinic</option>
+                    <option value="mi">Miami Center</option>
+                </select>
+            </div>
+            <button type="submit" class="btn-book">Book Appointment</button>
+        </form>
+    </div>
+
+    <h2 class="section-title">Success Stories</h2>
+    <div class="stories-container">
+        <div class="story-card">
+            <div class="stars">★★★★★</div>
+            <h3>Sarah & Mike</h3>
+            <p>"After 3 years of trying, IVF Care Center made our dream come true. Our baby boy is our miracle!"</p>
+        </div>
+        <div class="story-card">
+            <div class="stars">★★★★★</div>
+            <h3>The Patel Family</h3>
+            <p>"The doctors were so patient and kind. We felt supported every step of the way. Highly recommended."</p>
+        </div>
+        <div class="story-card">
+            <div class="stars">★★★★★</div>
+            <h3>Emily R.</h3>
+            <p>"I was nervous about the process, but the team explained everything perfectly. Thank you for my daughter."</p>
+        </div>
+        <div class="story-card">
+            <div class="stars">★★★★★</div>
+            <h3>Jessica & Tom</h3>
+            <p>"Professional, clean, and compassionate. We are forever grateful to the entire medical staff."</p>
+        </div>
+    </div>
+
+    <div class="doctors-bg">
+        <h2 class="section-title">Meet Our Specialists</h2>
+        <div class="doctors-grid">
+            <div class="doctor-card">
+                <img src="https://via.placeholder.com/400x300/e91e63/ffffff?text=Dr.+Alice" class="doctor-img" alt="Dr. Alice Smith">
+                <div class="doc-info">
+                    <span class="doc-name">Dr. Alice Smith</span>
+                    <span class="doc-spec">Reproductive Endocrinologist</span>
+                    <p>20+ years of experience helping families grow with advanced fertility treatments.</p>
+                </div>
+            </div>
+            <div class="doctor-card">
+                <img src="https://via.placeholder.com/400x300/2c3e50/ffffff?text=Dr.+Robert" class="doctor-img" alt="Dr. Robert Jones">
+                <div class="doc-info">
+                    <span class="doc-name">Dr. Robert Jones</span>
+                    <span class="doc-spec">Fertility Specialist</span>
+                    <p>Expert in IVF, IUI, and genetic screening technologies for high success rates.</p>
+                </div>
+            </div>
+            <div class="doctor-card">
+                <img src="https://via.placeholder.com/400x300/e91e63/ffffff?text=Dr.+Karen" class="doctor-img" alt="Dr. Karen Lee">
+                <div class="doc-info">
+                    <span class="doc-name">Dr. Karen Lee</span>
+                    <span class="doc-spec">Senior Embryologist</span>
+                    <p>Dedicated to precision and care in the laboratory to ensure healthy embryo development.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <button class="chat-btn" onclick="toggleChat()">💬</button>
+
+    <div class="chat-window" id="chatWindow">
+        <div class="chat-header">
+            <span>IVF Assistant</span>
+            <span class="close-btn" onclick="toggleChat()">✕</span>
+        </div>
+        <div class="chat-messages" id="chatMessages">
+            <div class="message bot-msg">Hello! I'm here to answer your questions about IVF steps, costs, and care. How can I help you today?</div>
+        </div>
+        <div class="chat-input-area">
+            <input type="text" id="userInput" placeholder="Type your question..." onkeypress="handleEnter(event)">
+            <button class="send-btn" onclick="sendMessage()">➤</button>
+        </div>
+    </div>
+
+    <script>
+        // 1. Toggle Chat Window (Robust Logic)
+        function toggleChat() {
+            var chatWindow = document.getElementById("chatWindow");
+            
+            // Check if display is 'none' (CSS default) or empty string (initial JS state)
+            if (chatWindow.style.display === "none" || chatWindow.style.display === "") {
+                chatWindow.style.display = "flex";
+            } else {
+                chatWindow.style.display = "none";
+            }
+        }
+
+        // 2. Handle 'Enter' key to send message
+        function handleEnter(e) {
+            if (e.key === 'Enter') sendMessage();
+        }
+
+        // 3. Send Message to Backend
+        async function sendMessage() {
+            const input = document.getElementById('userInput');
+            const message = input.value.trim();
+            if (!message) return;
+
+            // Add User Message to UI
+            addMessage(message, 'user-msg');
+            input.value = ''; // Clear input
+
+            // Add "Thinking..." bubble
+            const loadingId = addMessage('Thinking...', 'bot-msg');
+
+            try {
+                // Connect to Python API running on localhost:8000
+                const response = await fetch('http://127.0.0.1:8000/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: message })
+                });
+                
+                const data = await response.json();
+                
+                // Format response (convert newlines to HTML breaks)
+                let formattedResponse = data.response.replace(/\n/g, '<br>');
+                
+                // Update the "Thinking..." bubble with real answer
+                document.getElementById(loadingId).innerHTML = formattedResponse;
+                
+            } catch (error) {
+                console.error("Connection Error:", error);
+                document.getElementById(loadingId).innerText = "Error: I cannot reach the server. Is api.py running?";
+            }
+        }
+
+        // 4. Helper to Add Message Bubbles
+        function addMessage(text, className) {
+            const div = document.createElement('div');
+            div.className = `message ${className}`;
+            div.innerHTML = text;
+            div.id = Math.random().toString(36).substr(2, 9); // Random ID for updates
+            
+            const container = document.getElementById('chatMessages');
+            container.appendChild(div);
+            
+            // Auto-scroll to bottom
+            container.scrollTop = container.scrollHeight;
+            
+            return div.id;
+        }
+    </script>
+
+</body>
+</html>
