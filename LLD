@@ -1,0 +1,77 @@
+graph TD
+    %% --- Define styles for clarity ---
+    classDef frontend fill:#e1f5fe,stroke:#0288d1,stroke-width:2px;
+    classDef flask init:#fff3e0,stroke:#e65100,stroke-width:2px,stroke-dasharray: 5 5;
+    classDef flask runtime:#e8f5e9,stroke:#2e7d32,stroke-width:2px;
+    classDef cloud fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px;
+    classDef storage fill:#eceff1,stroke:#455a64,stroke-width:2px;
+
+    %% === PHASE A: SERVER INITIALIZATION ===
+    subgraph Backend [Flask Server - api.py]
+        subgraph Init [Phase A: Startup Initialization]
+            Start((Run python api.py)) --> InitFlask[Initialize Flask App & CORS]
+            InitFlask --> LoadRes[Begin load_resources]
+            
+            LoadRes --> ReadFAISS{Read faiss_index.index}
+            ReadFAISS -- Success --> MemFAISS[(FAISS Index in RAM)]
+            ReadFAISS -- FileNotFound --> InitError[Print Error & Stop]
+
+            LoadRes --> ReadPKL{Read chunks.pkl}
+            ReadPKL -- Success --> MemChunks[(Text Chunks in RAM)]
+            ReadPKL -- FileNotFound --> InitError
+
+            LoadRes --> InitEmbed[Init SentenceTransformer Model]
+            InitEmbed --> MemEmbed[Embedding Model in RAM]
+            
+            LoadRes --> InitGroq[Init Groq Client with API Key]
+            InitGroq --> MemGroq[Groq Client Object in RAM]
+
+            MemGroq --> ServerReady(((Server Ready Port 8000)))
+        end
+
+    %% === PHASE B: REQUEST HANDLING ===
+        subgraph Runtime [Phase B: /chat Request Handler]
+            RouteHandler(Flask Route @app.route /chat) --> GetJSON[request.get_json]
+            GetJSON --> Validate{Validate user_message}
+            
+            Validate -- Empty/Null --> Return400[Return HTTP 400 JSON error]
+            
+            Validate -- Valid String --> PrepContext[Prepare Context]
+            
+            subgraph ContextPrep [Context Logic]
+                PrepContext --> JoinChunks[Join all text chunks from RAM]
+                JoinChunks --> SafetyTrim[Safety Trim to 25k chars]
+                SafetyTrim --> FinalContext[Final Context String]
+            end
+            
+            FinalContext --> BuildPrompt[Construct System & User Messages]
+            BuildPrompt --> CallGroqApi[Call client.chat.completions.create]
+            
+            CallGroqApi -- Exception/Timeout --> Return500[Return HTTP 500 JSON Error]
+            CallGroqApi -- Success --> ExtractContent[Extract message.content from response]
+            ExtractContent --> Build200[Build JSON Response]
+             Build200 --> Return200[Return HTTP 200 JSON]
+        end
+    end
+
+    %% === EXTERNAL & FRONTEND ===
+    subgraph Frontend [Browser HTML/JS]
+        UserSend[User clicks Send] --> JSFunc[JS sendMessage function]
+        JSFunc -->|POST HTTPS /chat| RouteHandler
+        Return200 -->|JSON Data| JSFunc
+        Return400 -->|JSON Error| JSFunc
+        Return500 -->|JSON Error| JSFunc
+        JSFunc --> UpdateUI[Update Chat Window DOM]
+    end
+
+    subgraph Cloud [External Services]
+        CallGroqApi ====>|HTTPS POST Request| GroqLlama[Groq API Llama 3]
+        GroqLlama ====>|JSON Completion Response| CallGroqApi
+    end
+
+    %% Apply styles
+    class frontend UserSend,JSFunc,UpdateUI;
+    class flask init Start,InitFlask,LoadRes,ReadFAISS,ReadPKL,InitEmbed,InitGroq,InitError,ServerReady;
+    class flask runtime RouteHandler,GetJSON,Validate,Return400,PrepContext,JoinChunks,SafetyTrim,FinalContext,BuildPrompt,CallGroqApi,Return500,ExtractContent,Build200,Return200;
+    class cloud GroqLlama;
+    class storage MemFAISS,MemChunks,MemEmbed,MemGroq;
